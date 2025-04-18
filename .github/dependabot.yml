@@ -1,0 +1,28 @@
+version: 2
+updates:
+  # DevContainers
+  - package-ecosystem: "devcontainers"
+    directory: "/"
+    schedule:
+      interval: weekly
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: weekly
+    labels:
+      - "dependencies"
+      - "github_actions"
+
+  # Deno
+  - package-ecosystem: "deno"
+    directory: "/"
+    schedule:
+      interval: weekly
+    allow:
+      # Allow updates for specific Deno std modules
+      - dependency-name: "deno.land/std*"
+    labels:
+      - "dependencies"
+      - "deno"

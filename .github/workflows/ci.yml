@@ -1,0 +1,97 @@
+name: CI
+
+on:
+    push:
+        branches: [main]
+        tags:
+            - v*
+    pull_request:
+        branches: [main]
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Setup Deno
+              uses: denoland/setup-deno@v1
+              with:
+                  deno-version: v1.x
+
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            - name: Check formatting
+              run: deno fmt --check
+
+            - name: Run linter
+              run: deno lint
+
+            - name: Type check
+              run: deno check mod.ts
+
+            - name: Run tests
+              run: deno task test
+
+    publish-jsr:
+        needs: test
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Setup Deno
+              uses: denoland/setup-deno@v1
+              with:
+                  deno-version: v1.x
+
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            - name: Publish to JSR
+              run: deno publish
+              env:
+                  JSR_TOKEN: ${{ secrets.JSR_TOKEN }}
+
+    release:
+        needs: test
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            - name: Create GitHub Release
+              id: create_release
+              uses: actions/create-release@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  tag_name: ${{ github.ref_name }}
+                  release_name: Release ${{ github.ref_name }}
+                  draft: false
+                  prerelease: false
+                  body: |
+                    ## Deno-dim ${{ github.ref_name }}
+
+                    ### Installation
+
+                    ```ts
+                    // From JSR
+                    import * as dim from 'jsr:@buelbuel/dim@${{ github.ref_name }}'
+
+                    // From deno.land/x
+                    import * as dim from 'https://deno.land/x/dim@${{ github.ref_name }}/mod.ts'
+                    ```
+
+                    See [README.md](https://github.com/buelbuel/deno-dim/blob/main/README.md) for full documentation.
+
+            - name: Setup Deno
+              uses: denoland/setup-deno@v1
+              with:
+                  deno-version: v1.x
+
+            - name: Publish to JSR with version tag
+              run: deno publish
+              env:
+                  JSR_TOKEN: ${{ secrets.JSR_TOKEN }}
