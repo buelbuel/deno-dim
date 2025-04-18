@@ -4,7 +4,7 @@ on:
     push:
         branches: [main]
         tags:
-            - v*
+            - 'v*'
     pull_request:
         branches: [main]
 
@@ -97,10 +97,10 @@ jobs:
 
                 \`\`\`ts
                 // From JSR
-                import * as dim from 'jsr:@buelbuel/dim@$TAG_NAME'
+                import * as dim from 'jsr:@buelbuel/dim@${TAG_NAME#v}'
 
                 // From deno.land/x
-                import * as dim from 'https://deno.land/x/dim@$TAG_NAME/mod.ts'
+                import * as dim from 'https://deno.land/x/dim@${TAG_NAME#v}/mod.ts'
                 \`\`\`
 
                 See [README.md](https://github.com/buelbuel/deno-dim/blob/main/README.md) for full documentation."
