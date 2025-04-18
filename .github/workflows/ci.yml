@@ -38,28 +38,34 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         runs-on: ubuntu-latest
 
+        permissions:
+            contents: read
+            id-token: write
+
         steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
             - name: Setup Deno
               uses: denoland/setup-deno@v1
               with:
                   deno-version: v1.x
 
-            - name: Checkout code
-              uses: actions/checkout@v3
-
             - name: Publish to JSR
               run: deno publish
-              env:
-                  JSR_TOKEN: ${{ secrets.JSR_TOKEN }}
 
     release:
         needs: test
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
         runs-on: ubuntu-latest
 
+        permissions:
+            contents: write
+            id-token: write
+
         steps:
             - name: Checkout code
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
 
             - name: Create GitHub Release
               id: create_release
@@ -93,5 +99,3 @@ jobs:
 
             - name: Publish to JSR with version tag
               run: deno publish
-              env:
-                  JSR_TOKEN: ${{ secrets.JSR_TOKEN }}

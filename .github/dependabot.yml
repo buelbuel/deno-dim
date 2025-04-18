@@ -14,15 +14,3 @@ updates:
     labels:
       - "dependencies"
       - "github_actions"
-
-  # Deno
-  - package-ecosystem: "deno"
-    directory: "/"
-    schedule:
-      interval: weekly
-    allow:
-      # Allow updates for specific Deno std modules
-      - dependency-name: "deno.land/std*"
-    labels:
-      - "dependencies"
-      - "deno"
