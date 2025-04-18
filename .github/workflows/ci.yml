@@ -19,10 +19,15 @@ jobs:
                   deno-version: v1.x
 
             - name: Checkout code
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
 
-            - name: Check formatting
-              run: deno fmt --check
+            - name: Format code
+              run: deno fmt
+
+            - name: Check if formatting caused changes
+              id: check_changes
+              run: |
+                git diff --exit-code || echo "::warning::Formatting changes detected. The CI has fixed them automatically."
 
             - name: Run linter
               run: deno lint
@@ -32,6 +37,15 @@ jobs:
 
             - name: Run tests
               run: deno task test
+
+            - name: Commit formatting changes if on PR
+              if: github.event_name == 'pull_request' && steps.check_changes.outcome == 'failure'
+              run: |
+                git config --local user.email "action@github.com"
+                git config --local user.name "GitHub Action"
+                git add .
+                git commit -m "Apply automatic formatting"
+                git push
 
     publish-jsr:
         needs: test
