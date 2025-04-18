@@ -82,29 +82,28 @@ jobs:
               uses: actions/checkout@v4
 
             - name: Create GitHub Release
-              id: create_release
-              uses: actions/create-release@v1
               env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              with:
-                  tag_name: ${{ github.ref_name }}
-                  release_name: Release ${{ github.ref_name }}
-                  draft: false
-                  prerelease: false
-                  body: |
-                    ## Deno-dim ${{ github.ref_name }}
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                TAG_NAME="${GITHUB_REF#refs/tags/}"
+                RELEASE_NAME="Release ${TAG_NAME}"
 
-                    ### Installation
+                # Create a release using GitHub CLI
+                gh release create "$TAG_NAME" \
+                  --title "$RELEASE_NAME" \
+                  --notes "## Deno-dim $TAG_NAME
 
-                    ```ts
-                    // From JSR
-                    import * as dim from 'jsr:@buelbuel/dim@${{ github.ref_name }}'
+                ### Installation
 
-                    // From deno.land/x
-                    import * as dim from 'https://deno.land/x/dim@${{ github.ref_name }}/mod.ts'
-                    ```
+                \`\`\`ts
+                // From JSR
+                import * as dim from 'jsr:@buelbuel/dim@$TAG_NAME'
 
-                    See [README.md](https://github.com/buelbuel/deno-dim/blob/main/README.md) for full documentation.
+                // From deno.land/x
+                import * as dim from 'https://deno.land/x/dim@$TAG_NAME/mod.ts'
+                \`\`\`
+
+                See [README.md](https://github.com/buelbuel/deno-dim/blob/main/README.md) for full documentation."
 
             - name: Setup Deno
               uses: denoland/setup-deno@v1
