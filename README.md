@@ -3,9 +3,9 @@
 [![jsr.io](https://jsr.io/badges/@buelbuel/dim)](https://jsr.io/@buelbuel/dim)
 ![GitHub License](https://img.shields.io/github/license/buelbuel/dim)
 
-dim is an idiomatic web component helper library, designed as a sane alternative to the node madness of today's web. It focuses on simplicity and adherence to web standards only, offering quality-of-life features - but with zero dependencies.
+dim is an idiomatic web component helper library with zero dependencies. It focuses on simplicity and adherence to web standards, offering quality-of-life features for modern web development.
 
-This is the Deno version of dim, with full TypeScript support and JSR compatibility. Unlike the JavaScript version, it requires no build steps and leverages Deno's modern module system.
+This is the Deno version of dim, with full TypeScript support and JSR compatibility.
 
 ## Features
 
@@ -14,8 +14,8 @@ This is the Deno version of dim, with full TypeScript support and JSR compatibil
 - TypeScript-first
 - Deno-native with no build steps
 - Modular: use only what you need
-- Abstracted HTML and Shadow Element components for less boilerplate
-- Utility functions for HTML templating and styling
+- Base components with less boilerplate
+- HTML templating and styling utilities
 - Reactivity
 - i18n
 - Simple built-in router (optional - works well with Oak, Hono, or other Deno routers)
@@ -99,8 +99,8 @@ class MyComponent extends BaseElement {
 
 	render(): string {
 		return html`
-      <div>My Component</div>
-      <button id="increment">Increment ${this.count}</button>
+      <div>Count: ${this.count}</div>
+      <button id="increment">Increment</button>
     `
 	}
 
@@ -165,20 +165,19 @@ await app.listen({ port: 8000 })
 ### Internationalization
 
 ```ts
-import { i18n, t } from '@buelbuel/dim'
+import { i18n } from '@buelbuel/dim'
 
 i18n.addTranslations('en', {
 	hello: {
-		world: 'World',
+		world: 'Hello World',
 	},
 })
 
-const greeting = html`<p>${t('hello.world')}</p>`
+// In components
+const greeting = i18n.t('hello.world')
 ```
 
 ## Development
-
-To contribute to this project:
 
 ```bash
 # Run tests
