@@ -1,0 +1,56 @@
+{
+	"name": "@buelbuel/dim",
+	"version": "0.1.5",
+	"exports": {
+		".": "./mod.ts",
+		"./base": "./src/base/mod.ts",
+		"./utils": "./src/utils/mod.ts"
+	},
+	"compilerOptions": {
+		"lib": [
+			"dom",
+			"dom.iterable",
+			"deno.ns",
+			"deno.unstable"
+		],
+		"strict": true
+	},
+	"lint": {
+		"rules": {
+			"tags": [
+				"recommended",
+				"jsr"
+			],
+			"include": [
+				"no-slow-types",
+				"no-throw-literal",
+				"no-useless-rename"
+			]
+		},
+		"include": [
+			"src/",
+			"mod.ts"
+		],
+		"exclude": [
+			"dist/"
+		]
+	},
+	"fmt": {
+		"include": [
+			"./"
+		],
+		"exclude": [
+			"./dist/"
+		],
+		"useTabs": true,
+		"lineWidth": 120,
+		"indentWidth": 4,
+		"semiColons": false,
+		"singleQuote": true,
+		"proseWrap": "preserve"
+	},
+	"tasks": {
+		"test": "deno test --allow-read tests/",
+		"check": "deno check mod.ts"
+	}
+}

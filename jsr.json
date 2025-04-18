@@ -1,0 +1,19 @@
+{
+	"$schema": "https://jsr.io/schema/config-file.v1.json",
+	"name": "@buelbuel/dim",
+	"version": "0.1.5",
+	"description": "An idiomatic web component helper library with zero dependencies",
+	"exports": {
+		".": "./mod.ts",
+		"./base": "./src/base/mod.ts",
+		"./utils": "./src/utils/mod.ts"
+	},
+	"publish": {
+		"include": [
+			"mod.ts",
+			"src/**/*.ts",
+			"LICENSE",
+			"README.md"
+		]
+	}
+}
